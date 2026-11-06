@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini User Management Application</title>
+</head>
+<body>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #222;
+}
+
+section {
+    background-color: white;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 700px;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #176b45;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    margin-top: 8px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #104b30;
+}
+
+.user-card {
+    background-color: #f1f7f3;
+    padding: 15px;
+    margin-top: 15px;
+    border-left: 4px solid #176b45;
+    border-radius: 5px;
+}
+
+#message {
+    text-align: center;
+    font-weight: bold;
+}
+    </style>
+            <form id="userForm">
+            <input type="text" id="fullName" placeholder="Full Name" required>
+
+            <input type="email" id="email" placeholder="Email Address" required>
+
+            <input type="number" id="age" placeholder="Age" required>
+
+            <button type="submit">Register User</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Retrieve User by ID</h2>
+
+        <input type="number" id="searchId" placeholder="Enter User ID">
+
+        <button onclick="getUserById()">Find User</button>
+    </section>
+
+    <section>
+        <h2>Search Users by Name</h2>
+
+        <input type="text" id="searchName" placeholder="Enter a name">
+
+        <button onclick="searchUsers()">Search</button>
+    </section>
+
+    <section>
+        <h2>Update User Information</h2>
+
+        <input type="number" id="updateId" placeholder="User ID">
+
+        <input type="text" id="updateName" placeholder="New Full Name">
+
+        <input type="email" id="updateEmail" placeholder="New Email">
+
+        <input type="number" id="updateAge" placeholder="New Age">
+
+        <button onclick="updateUser()">Update User</button>
+    </section>
+
+    <section>
+        <h2>Delete User</h2>
+
+        <input type="number" id="deleteId" placeholder="Enter User ID">
+
+        <button onclick="deleteUser()">Delete User</button>
+    </section>
+
+    <section>
+        <h2>All Registered Users</h2>
+
+        <button onclick="getAllUsers()">Display All Users</button>
+
+        <div id="userList"></div>
+    </section>
+
+    <p id="message"></p>
+
+  <script>
+// Array to store registered users
+let users = [];
+
+// Generate unique IDs
+let nextId = 1;
+
+
+// Helper function to display messages
+function showMessage(message) {
+    document.getElementById("message").textContent = message;
+}
+
+
+// Helper function to validate email addresses
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+
+// Helper function to display users
+function displayUsers(userArray) {
+
+    let output = "";
+
+    if (userArray.length === 0) {
+        document.getElementById("userList").textContent =
+            "No users found.";
+        return;
+    }
+
+    userArray.forEach(function(user) {
+
+        output += `
+            <div class="user-card">
+                <h3>${escapeHTML(user.fullName)}</h3>
+                <p>ID: ${user.id}</p>
+                <p>Email: ${escapeHTML(user.email)}</p>
+                <p>Age: ${user.age}</p>
+                <p>Registration Date: ${user.registrationDate}</p>
+            </div>
+        `;
+
+    });
+
+    document.getElementById("userList").innerHTML = output;
+}
+
+
+// Escape user-provided text before displaying it as HTML
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, function(character) {
+        const characters = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        };
+
+        return characters[character];
+    });
+}
+
+
+// 1. Register a new user
+function registerUser(event) {
+
+    event.preventDefault();
+
+    try {
+
+        let fullName = document.getElementById("fullName").value.trim();
+
+        let email = document.getElementById("email").value.trim().toLowerCase();
+
+        let age = Number(document.getElementById("age").value);
+
+        // Validate user information
+        if (fullName === "" || email === "" || age <= 0 || !Number.isInteger(age)) {
+            throw new Error("Please enter valid user information.");
+        }
+
+        if (!isValidEmail(email)) {
+            throw new Error("Please enter a valid email address.");
+        }
+
+        // Prevent duplicate email addresses
+        let existingUser = users.find(function(user) {
+            return user.email === email;
+        });
+
+        if (existingUser) {
+            throw new Error("This email address is already registered.");
+        }
+
+        // Create new user object
+        let newUser = {
+            id: nextId++,
+            fullName: fullName,
+            email: email,
+            age: age,
+            registrationDate: new Date().toLocaleDateString()
+        };
+
+        // Add user to array
+        users.push(newUser);
+
+        showMessage("User registered successfully!");
+
+        document.getElementById("userForm").reset();
+
+        displayUsers(users);
+
+    } catch (error) {
+
+        showMessage(error.message);
+
+    }
+}
+
+
+// 2. Retrieve all registered users
+function getAllUsers() {
+
+    displayUsers(users);
+
+    showMessage("Displaying all registered users.");
+}
+
+
+// 3. Retrieve a single user using their ID
+function getUserById() {
+
+    try {
+
+        let id = Number(document.getElementById("searchId").value);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new Error("Please enter a valid user ID.");
+        }
+
+        let foundUser = users.find(function(user) {
+            return user.id === id;
+        });
+
+        if (!foundUser) {
+            throw new Error("User not found.");
+        }
+
+        displayUsers([foundUser]);
+
+        showMessage("User found successfully.");
+
+    } catch (error) {
+
+        showMessage(error.message);
+
+    }
+}
+
+
+// 4. Update user information
+function updateUser() {
+
+    try {
+
+        let id = Number(document.getElementById("updateId").value);
+
+        let newName = document.getElementById("updateName").value.trim();
+
+        let newEmail = document.getElementById("updateEmail").value.trim().toLowerCase();
+
+        let newAge = Number(document.getElementById("updateAge").value);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new Error("Please enter a valid user ID.");
+        }
+
+        let user = users.find(function(user) {
+            return user.id === id;
+        });
+
+        if (!user) {
+            throw new Error("User not found.");
+        }
+
+        if (newName === "" || newEmail === "" || newAge <= 0 || !Number.isInteger(newAge)) {
+            throw new Error("Please enter valid updated information.");
+        }
+
+        if (!isValidEmail(newEmail)) {
+            throw new Error("Please enter a valid email address.");
+        }
+
+        // Check whether another user already owns this email
+        let emailExists = users.some(function(existingUser) {
+            return existingUser.email === newEmail && existingUser.id !== id;
+        });
+
+        if (emailExists) {
+            throw new Error("Another user is already using this email.");
+        }
+
+        // Update the user's information
+        user.fullName = newName;
+        user.email = newEmail;
+        user.age = newAge;
+
+        showMessage("User information updated successfully!");
+
+        displayUsers(users);
+
+    } catch (error) {
+
+        showMessage(error.message);
+
+    }
+}
+
+
+// 5. Delete a user
+function deleteUser() {
+
+    try {
+
+        let id = Number(document.getElementById("deleteId").value);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new Error("Please enter a valid user ID.");
+        }
+
+        let userExists = users.some(function(user) {
+            return user.id === id;
+        });
+
+        if (!userExists) {
+            throw new Error("User not found.");
+        }
+
+        // Remove user from array
+        users = users.filter(function(user) {
+            return user.id !== id;
+        });
+
+        showMessage("User deleted successfully!");
+
+        displayUsers(users);
+
+    } catch (error) {
+
+        showMessage(error.message);
+
+    }
+}
+
+
+// 6. Search users by name
+function searchUsers() {
+
+    try {
+
+        let name = document.getElementById("searchName").value.trim().toLowerCase();
+
+        if (name === "") {
+            throw new Error("Please enter a name to search.");
+        }
+
+        // Find users whose names contain the search text
+        let matchingUsers = users.filter(function(user) {
+            return user.fullName.toLowerCase().includes(name);
+        });
+
+        if (matchingUsers.length === 0) {
+            throw new Error("No users found with that name.");
+        }
+
+        displayUsers(matchingUsers);
+
+        showMessage("Search completed successfully.");
+
+    } catch (error) {
+
+        showMessage(error.message);
+
+    }
+}
+
+
+// Connect registration form to registerUser()
+document.getElementById("userForm").addEventListener("submit", registerUser);
+
+  </script>
+
+</body>
+</html>

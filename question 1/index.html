@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grading System Q1</title>
+</head>
+<body>
+    <h2>Question 1</h2>
+    <input type="text" id="name" placeholder="Enter full name">
+
+    <input type="text" id="score" inputmode="decimal" placeholder="Enter scores separated by commas">
+
+    <button id="checkBtn">Check Grade</button>
+
+    <p id="result"></p>
+
+    <script>
+        const name = document.getElementById("name")
+        const score = document.getElementById("score")
+        const result = document.getElementById("result")
+        const checkBtn = document.getElementById("checkBtn")
+
+        checkBtn.addEventListener("click", function () {
+            const studentName = name.value.trim()
+            const scoreValues = score.value.split(",").map(value => value.trim())
+            const scores = scoreValues.map(Number)
+
+            if (!studentName || scoreValues.some(value => value === "") || scores.some(value => !Number.isFinite(value) || value < 0 || value > 100)) {
+                result.textContent = "Please enter the student's name and scores from 0 to 100."
+                return
+            }
+
+            const total = scores.reduce((sum, value) => sum + value, 0)
+            const average = total / scores.length
+            let grade
+
+            if (average >= 70) {
+                grade = "A"
+            } else if (average >= 60) {
+                grade = "B"
+            } else if (average >= 50) {
+                grade = "C"
+            } else if (average >= 45) {
+                grade = "D"
+            } else if (average >= 40) {
+                grade = "E"
+            } else {
+                grade = "F"
+            }
+
+            result.textContent = `${studentName} — Total: ${total}, Average: ${average.toFixed(2)}, Grade: ${grade}`
+        })
+
+    </script>
+
+</body>
+</html>

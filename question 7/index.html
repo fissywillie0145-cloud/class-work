@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <button onclick="displayAccount()">Display Account</button>
+
+    <h2>Deposit Money</h2>
+
+    <input type="number" id="depositAmount" placeholder="Enter deposit amount">
+
+    <button onclick="depositMoney()">Deposit</button>
+
+    <h2>Withdraw Money</h2>
+
+    <input type="number" id="withdrawAmount" placeholder="Enter withdrawal amount">
+
+    <button onclick="withdrawMoney()">Withdraw</button>
+
+    <h2>Check Balance</h2>
+
+    <button onclick="checkBalance()">Check Balance</button>
+
+    <div id="result"></div>
+ <script>
+// Create bank account object
+let account = {
+    accountHolder: "John Smith",
+    accountNumber: "1234567890",
+    balance: 50000
+};
+
+
+// Function to deposit money
+function depositMoney() {
+
+    let amount = Number(document.getElementById("depositAmount").value);
+
+    if (amount <= 0) {
+
+        document.getElementById("result").innerHTML =
+            "Invalid deposit! Enter an amount greater than zero.";
+
+        return;
+    }
+
+    account.balance += amount;
+
+    document.getElementById("result").innerHTML =
+        "Deposit successful! You deposited ₦" + amount.toLocaleString() +
+        "<br>New Balance: ₦" + account.balance.toLocaleString();
+
+    document.getElementById("depositAmount").value = "";
+}
+
+
+// Function to withdraw money
+function withdrawMoney() {
+
+    let amount = Number(document.getElementById("withdrawAmount").value);
+
+    if (amount <= 0) {
+
+        document.getElementById("result").innerHTML =
+            "Invalid withdrawal! Enter an amount greater than zero.";
+
+        return;
+    }
+
+    if (amount > account.balance) {
+
+        document.getElementById("result").innerHTML =
+            "Transaction failed! Insufficient balance.";
+
+        return;
+    }
+
+    account.balance -= amount;
+
+    document.getElementById("result").innerHTML =
+        "Withdrawal successful! You withdrew ₦" + amount.toLocaleString() +
+        "<br>New Balance: ₦" + account.balance.toLocaleString();
+
+    document.getElementById("withdrawAmount").value = "";
+}
+
+
+// Function to check account balance
+function checkBalance() {
+
+    document.getElementById("result").innerHTML =
+        "Your current balance is ₦" + account.balance.toLocaleString();
+}
+
+
+// Function to display account information
+function displayAccount() {
+
+    document.getElementById("result").innerHTML = `
+
+        <h3>Account Information</h3>
+
+        <p>Account Holder: ${account.accountHolder}</p>
+
+        <p>Account Number: ${account.accountNumber}</p>
+
+        <p>Account Balance: ₦${account.balance.toLocaleString()}</p>
+
+    `;
+}
+
+ </script> 
+</body>
+</html>

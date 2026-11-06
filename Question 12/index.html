@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> JSON Data Management</title>
+</head>
+<body>
+       <input type="email" id="searchEmail" placeholder="Enter user email">
+
+    <button onclick="searchUser()">Search User</button>
+
+    <hr>
+
+    <h2>User Information</h2>
+
+    <div id="result"></div>
+
+    <h2>JSON Data</h2>
+
+    <button onclick="displayJSON()">Display JSON String</button>
+
+    <pre id="jsonOutput"></pre>
+<script>
+        // <!-- const users = [
+        //     { name: "John Doe", email: "john.doe@example.com" },
+        //     { name: "Jane Smith", email: "jane.smith@example.com" }
+        // ]; -->
+        
+// Create five user objects
+let users = [
+
+    {
+        id: 1,
+        name: "John Smith",
+        email: "john@gmail.com",
+        age: 22,
+        course: "Computer Science"
+    },
+
+    {
+        id: 2,
+        name: "Mary James",
+        email: "mary@gmail.com",
+        age: 20,
+        course: "Mathematics"
+    },
+
+    {
+        id: 3,
+        name: "David Paul",
+        email: "david@gmail.com",
+        age: 25,
+        course: "Web Development"
+    },
+
+    {
+        id: 4,
+        name: "Sarah Johnson",
+        email: "sarah@gmail.com",
+        age: 21,
+        course: "Biology"
+    },
+
+    {
+        id: 5,
+        name: "Peter Williams",
+        email: "peter@gmail.com",
+        age: 23,
+        course: "Accounting"
+    }
+
+];
+
+
+// Convert JavaScript objects into JSON string
+let jsonData = JSON.stringify(users, null, 2);
+
+
+// Convert JSON string back into JavaScript objects
+let convertedUsers = JSON.parse(jsonData);
+
+
+// Function to search for a user
+function searchUser() {
+
+    // Get email entered by the user
+    let email = document.getElementById("searchEmail").value.trim();
+
+
+    // Search for the user
+    let foundUser = convertedUsers.find(function(user) {
+
+        return user.email.toLowerCase() === email.toLowerCase();
+
+    });
+
+
+    // Check if user exists
+    if (foundUser) {
+
+        document.getElementById("result").innerHTML = `
+            <h3>User Found!</h3>
+            <p>ID: ${foundUser.id}</p>
+            <p>Name: ${foundUser.name}</p>
+            <p>Email: ${foundUser.email}</p>
+            <p>Age: ${foundUser.age}</p>
+            <p>Course: ${foundUser.course}</p>
+        `;
+
+    } else {
+
+        document.getElementById("result").innerHTML =
+            "User not found!";
+
+    }
+
+}
+
+
+// Function to display JSON string
+function displayJSON() {
+
+    document.getElementById("jsonOutput").textContent = jsonData;
+
+}
+
+ </script>
+</body>
+</html>

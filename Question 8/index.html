@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Password Validation System</title>
+</head>
+<body>
+        <input type="password" id="password" placeholder="Enter your password">
+
+    <button onclick="validatePassword()">Validate Password</button>
+
+    <div id="result"></div>
+
+    <Script>
+
+        
+// Function to validate password
+function validatePassword() {
+
+    // Get password from HTML
+    let password = document.getElementById("password").value;
+
+    // Create an empty array for missing requirements
+    let missing = [];
+
+
+    // Check password length
+    if (password.length < 8) {
+        missing.push("Password must contain at least 8 characters.");
+    }
+
+
+    // Check uppercase letter
+    if (!/[A-Z]/.test(password)) {
+        missing.push("Password must contain at least one uppercase letter.");
+    }
+
+
+    // Check lowercase letter
+    if (!/[a-z]/.test(password)) {
+        missing.push("Password must contain at least one lowercase letter.");
+    }
+
+
+    // Check number
+    if (!/[0-9]/.test(password)) {
+        missing.push("Password must contain at least one number.");
+    }
+
+
+    // Check special character
+    if (!/[^A-Za-z0-9]/.test(password)) {
+        missing.push("Password must contain at least one special character.");
+    }
+
+
+    // Display result
+    if (missing.length === 0) {
+
+        document.getElementById("result").innerHTML =
+            "<h3>Password is valid!</h3>";
+
+    } else {
+
+        document.getElementById("result").innerHTML =
+            "<h3>Password is invalid!</h3>" +
+            "<p>Missing requirements:</p>" +
+            "<ul>" +
+            missing.map(function(requirement) {
+                return `<li>${requirement}</li>`;
+            }).join("") +
+            "</ul>";
+
+    }
+
+}
+
+    </Script>
+</body>
+</html>

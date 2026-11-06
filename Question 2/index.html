@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Employee Salary Calculator</title>
+</head>
+<body>
+        <label>Employee Name:</label>
+    <input type="text" id="employeeName" placeholder="Enter employee name">
+
+    <br><br>
+
+    <label>Basic Salary (₦):</label>
+    <input type="number" id="basicSalary" placeholder="Enter basic salary">
+
+    <br><br>
+
+    <button onclick="calculateSalary()">Calculate Salary</button>
+
+    <div id="result"></div>
+
+  <script>
+    function calculateSalary() {
+      const employeeName = document.getElementById("employeeName").value;
+      const basicSalary = parseFloat(document.getElementById("basicSalary").value);
+
+      if (!employeeName || isNaN(basicSalary)) {
+        document.getElementById("result").innerHTML = "Please enter valid information.";
+        return;
+      }
+
+      const housingAllowance = basicSalary * 0.3;
+      const transportAllowance = basicSalary * 0.1;
+      const totalSalary = basicSalary + housingAllowance + transportAllowance;
+
+      document.getElementById("result").innerHTML = `
+        <h3>Salary Details for ${employeeName}</h3>
+        <p><strong>Basic Salary:</strong> ₦${basicSalary.toFixed(2)}</p>
+        <p><strong>Housing Allowance:</strong> ₦${housingAllowance.toFixed(2)}</p>
+        <p><strong>Transport Allowance:</strong> ₦${transportAllowance.toFixed(2)}</p>
+        <p><strong>Total Salary:</strong> ₦${totalSalary.toFixed(2)}</p>
+      `;
+    }
+  </script>
+</body>
+</html>

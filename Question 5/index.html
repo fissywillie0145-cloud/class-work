@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Inventory Management System Q5</title>
+</head>
+
+<body>
+    <label for="number">Product ID
+        <br>
+        <input type="number" name="" id="productId" placeholder="E.g 0001">
+    </label> <br>
+
+    <label for="name">Product name
+        <br>
+        <input type="text" name="" id="productName" placeholder="Enter your product name">
+    </label> <br>
+
+    <label for="number">Price
+        <br>
+        <input type="number" name="" id="price" placeholder="₦50,000">
+    </label> <br>
+
+    <label for="number">Quantity
+        <br>
+        <input type="number" name="" id="quantity" placeholder="500kg">
+    </label>
+
+    <input type="text" id="searchName" placeholder="Search product by name">
+     <button onclick="searchProduct()">Search</button>
+
+     <button onclick="addProduct()">Add Product</button>
+
+     <button onclick="displayProducts()">Display Products</button>
+
+    <button onclick="calculateInventory()">Calculate Total</button>
+
+   <button onclick="updateQuantity()">update</button>
+   
+    <p id="result"></p>
+    <script>
+
+   const inventory = []
+  function addProduct() {
+            const id = document.getElementById("productId").value;
+            const name = document.getElementById("productName").value;
+            const price = parseFloat(document.getElementById("price").value);
+            const quantity = parseInt(document.getElementById("quantity").value);
+            const result = document.getElementById("result");
+
+            if (!id || !name || isNaN(price) || isNaN(quantity)) {
+                result.innerHTML = "Please fill in all fields.";
+                return;
+            }
+
+            if (price < 0) {
+                result.innerHTML = "Price cannot be negative.";
+                return;
+            }
+
+            if (quantity < 5) {
+                result.innerHTML = "Quantity cannot be less than 5.";
+                return;
+            }
+        // product object to store product details
+            const product = { 
+                id,
+                name,
+                price,
+                quantity
+             };
+            inventory.push(product);
+            result.innerHTML = "Product added successfully!";
+
+            // clear input
+              document.getElementById("productId").value = "";
+              document.getElementById("productName").value = "";    
+              document.getElementById("price").value = "";
+              document.getElementById("quantity").value = "";
+              
+
+              displayProducts();
+
+
+        }
+
+ // to display all products
+        function displayProducts() {
+            const productList = document.getElementById("result");
+            productList.innerHTML = "";
+
+            if (inventory.length === 0) {
+                productList.innerHTML = "No products available.";
+                return;
+            }
+
+            const table = document.createElement("table");
+            const headerRow = document.createElement("tr");
+            const headers = ["Product ID", "Product Name", "Price", "Quantity"];
+
+            headers.forEach(headerText => {
+                const header = document.createElement("th");
+                header.textContent = headerText;
+                headerRow.appendChild(header);
+            });
+
+            table.appendChild(headerRow);
+
+            inventory.forEach(product => {
+                const row = document.createElement("tr");
+
+                Object.values(product).forEach(text => {
+                    const cell = document.createElement("td");
+                    cell.textContent = text;
+                    row.appendChild(cell);
+                });
+
+                table.appendChild(row);
+            });
+
+            productList.appendChild(table);
+        }
+
+
+        
+     function calculateInventory() {
+
+    // Get values from HTML inputs
+    let product = document.getElementById("productName").value;
+
+    let quantity = Number(document.getElementById("quantity").value);
+
+    let price = Number(document.getElementById("price").value);
+
+    // Check if inputs are empty or invalid
+    if (product === "" || quantity <= 0 || price <= 0) {
+        alert("Please enter valid product details");
+        return;
+    }
+
+    // Calculate total value
+    let total = quantity * price;
+
+    // Display result
+    document.getElementById("result").innerHTML =
+        product + " Total Value: ₦" + total.toLocaleString();
+
+}
+
+
+function searchProduct() {
+
+    let searchName = document.getElementById("searchName").value;
+
+    let foundProduct = inventory.find(function(product) {
+
+        return product.name.toLowerCase().includes(searchName.toLowerCase());
+
+    });
+
+    if (foundProduct) {
+
+        document.getElementById("result").innerHTML = `
+            <h3>Product Found</h3>
+            <p>Product ID: ${foundProduct.id}</p>
+            <p>Product Name: ${foundProduct.name}</p>
+            <p>Price: ${foundProduct.price}</p>
+            <p>Quantity: ${foundProduct.quantity}</p>
+        `;
+
+    } else {
+
+        document.getElementById("result").innerHTML = "Product not found!";
+
+    }
+
+}
+
+
+function updateQuantity() {
+
+    // Ask for the product ID
+    let id = prompt("Enter Product ID:");
+
+    // Find the product
+    let product = inventory.find(function(item) {
+        return item.id === id;
+    });
+
+    // Check if product exists
+    if (product) {
+
+        // Ask for the new quantity
+        let newQuantity = prompt("Enter new quantity:");
+
+        if (newQuantity === null || newQuantity.trim() === "") {
+            return;
+        }
+
+        newQuantity = Number(newQuantity);
+
+        if (!Number.isInteger(newQuantity) || newQuantity < 0) {
+            alert("Enter a valid quantity");
+            return;
+        }
+
+        // Update quantity
+        product.quantity = newQuantity;
+
+        alert("Quantity updated successfully!");
+
+        // Display updated products
+        displayProducts();
+
+    } else {
+
+        alert("Product not found!");
+
+    }
+
+}
+          
+
+
+
+    </script>
+    * Add new products.
+    * Display all products.
+    * Calculate the total value of the inventory.
+    * Search for a particular product.
+    * Update product quantity.
+    * Identify products whose quantity is below 5
+</body>
+
+</html>

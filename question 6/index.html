@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart Application</title>
+</head>
+
+<body>
+    <label>Product Name</label><br>
+    <input type="text" id="productName" placeholder="Enter product name">
+    <br><br>
+
+    <label>Price</label><br>
+    <input type="number" id="price" placeholder="Enter price">
+    <br><br>
+
+    <label>Quantity</label><br>
+    <input type="number" id="quantity" value="1" min="1">
+    <br><br>
+
+    <button onclick="addToCart()">Add to Cart</button>
+
+    <hr>
+
+    <h2>My Shopping Cart</h2>
+
+    <div id="cartItems"></div>
+
+    <h3 id="subtotal">Subtotal: ₦0</h3>
+
+    <h3 id="discount">Discount: ₦0</h3>
+
+    <h3 id="total">Total Amount: ₦0</h3>
+
+    <button onclick="checkout()">Checkout</button>
+
+    <hr>
+
+    <h2>Checkout Summary</h2>
+
+    <div id="checkoutSummary"></div>
+
+
+
+    <script>
+        let cart = [];
+        function addToCart() {
+
+            let name = document.getElementById("productName").value.trim();
+
+            let price = Number(document.getElementById("price").value);
+
+            let quantity = Number(document.getElementById("quantity").value);
+
+
+            // Validate inputs
+            if (name === "" || !Number.isFinite(price) ||
+                !Number.isInteger(quantity) || price <= 0 || quantity <= 0) {
+
+                alert("Please enter valid product details");
+                return;
+
+            }
+
+
+            // Create product object
+            let product = {
+                name: name,
+                price: price,
+                quantity: quantity
+            };
+
+
+            // if product already exists 
+            let existingProduct = cart.find(function (item) {
+                return item.name.toLowerCase() === name.toLowerCase()
+                    && item.price === price;
+            });
+
+
+            if (existingProduct) {
+
+                existingProduct.quantity += quantity;
+
+            } else {
+
+                cart.push(product);
+
+            }
+
+
+            alert("Product added to cart!");
+
+
+            // Clear inputs
+            document.getElementById("productName").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("quantity").value = 1;
+
+
+            displayCart();
+
+        }
+
+
+
+        //  DISPLAY CART PRODUCTS
+        function displayCart() {
+
+            let output = "";
+
+            let subtotal = 0;
+
+
+            cart.forEach(function (product, index) {
+
+                let itemTotal = product.price * product.quantity;
+
+                subtotal += itemTotal;
+
+
+                output += `
+            <div>
+
+                <h3>${product.name}</h3>
+
+                <p>Price: ₦${product.price.toLocaleString("en-NG")}</p>
+
+                <p>Quantity: ${product.quantity}</p>
+
+                <p>Item Total: ₦${itemTotal.toLocaleString("en-NG")}</p>
+
+                <button onclick="decreaseQuantity(${index})">-</button>
+
+                <button onclick="increaseQuantity(${index})">+</button>
+
+                <button onclick="removeProduct(${index})">Remove</button>
+
+            </div>
+
+            <hr>
+        `;
+
+            });
+
+
+            document.getElementById("cartItems").innerHTML =
+                output || "Your cart is empty.";
+
+
+            // Calculate discount
+            let discountAmount = 0;
+
+            if (subtotal > 50000) {
+
+                discountAmount = subtotal * 0.10;
+
+            }
+
+
+            // Calculate final amount
+            let finalTotal = subtotal - discountAmount;
+
+
+            // Display amounts
+            document.getElementById("subtotal").innerHTML =
+                "Subtotal: ₦" + subtotal.toLocaleString("en-NG");
+
+            document.getElementById("discount").innerHTML =
+                "Discount: ₦" + discountAmount.toLocaleString("en-NG");
+
+            document.getElementById("total").innerHTML =
+                "Total Amount: ₦" + finalTotal.toLocaleString("en-NG");
+
+        }
+
+
+
+        // 3. INCREASE PRODUCT QUANTITY
+        function increaseQuantity(index) {
+
+            cart[index].quantity++;
+
+            displayCart();
+
+        }
+
+
+
+        // 4. DECREASE PRODUCT QUANTITY
+        function decreaseQuantity(index) {
+
+            if (cart[index].quantity > 1) {
+
+                cart[index].quantity--;
+
+            }
+
+            displayCart();
+
+        }
+
+
+
+        // 5. REMOVE PRODUCT FROM CART
+        function removeProduct(index) {
+
+            cart.splice(index, 1);
+
+            displayCart();
+
+        }
+
+
+
+        // 6. CHECKOUT SUMMARY
+        function checkout() {
+
+            if (cart.length === 0) {
+
+                alert("Your shopping cart is empty!");
+                return;
+
+            }
+
+
+            let subtotal = 0;
+
+            let output = "<h3>Purchase Details</h3>";
+
+
+            cart.forEach(function (product) {
+
+                let itemTotal = product.price * product.quantity;
+
+                subtotal += itemTotal;
+
+
+                output += `
+            <p>
+                ${product.name} -
+                ${product.quantity} x ₦${product.price.toLocaleString("en-NG")}
+                = ₦${itemTotal.toLocaleString("en-NG")}
+            </p>
+        `;
+
+            });
+
+
+            let discountAmount = 0;
+
+
+            if (subtotal > 50000) {
+
+                discountAmount = subtotal * 0.10;
+
+            }
+
+
+            let finalTotal = subtotal - discountAmount;
+
+
+            output += `
+        <hr>
+
+        <p>Subtotal: ₦${subtotal.toLocaleString("en-NG")}</p>
+
+        <p>10% Discount: ₦${discountAmount.toLocaleString("en-NG")}</p>
+
+        <h3>Final Amount: ₦${finalTotal.toLocaleString("en-NG")}</h3>
+
+        <h3>Thank you for shopping with us!</h3>
+    `;
+
+
+            document.getElementById("checkoutSummary").innerHTML = output;
+
+        }
+
+    </script>
+</body>
+
+</html>

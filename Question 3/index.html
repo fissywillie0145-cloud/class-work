@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <script>
+
+let numbers = [12, 7, 25, 8, 14, 3, 19, 6, 30, 11, 4, 21, 16, 9, 2];
+
+let evenNumbers = [];
+let oddNumbers = [];
+let sum = 0;
+let largest = numbers[0];
+let smallest = numbers[0];
+
+
+for (let i = 0; i < numbers.length; i++) {
+
+    if (numbers[i] % 2 === 0) {
+        evenNumbers.push(numbers[i]);
+    } else {
+        oddNumbers.push(numbers[i]);
+    }
+    sum += numbers[i];
+    if (numbers[i] > largest) {
+        largest = numbers[i];
+    }
+    if (numbers[i] < smallest) {
+        smallest = numbers[i];
+    }
+}
+
+
+
+let average = sum / numbers.length;
+
+console.log("Even Numbers:", evenNumbers);
+
+console.log("Odd Numbers:", oddNumbers);
+
+console.log("Largest Number:", largest);
+
+console.log("Smallest Number:", smallest);
+
+console.log("Sum:", sum);
+
+console.log("Average:", average);
+    </script>
+</body>
+</html>

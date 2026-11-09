@@ -8,10 +8,11 @@ function addStudent() {
     let email = document.getElementById("email").value;
     let age = Number(document.getElementById("age").value);
     let course = document.getElementById("course").value;
+    const searchResult =document.getElementById("searchResult")
 
     if (!id || !name || !email || !age || !course) {
         // alert("Please fill in all fields");
-        document.getElementById("searchResult").innerHTML = "Please fill in all fields";
+        searchResult.innerHTML = "Please fill in all fields";
         return;
     }
 
@@ -20,7 +21,7 @@ function addStudent() {
 
     if (existingStudent) {
         // alert("Student ID already exists");
-        document.getElementById("searchResult").innerHTML = "Student ID already exists";
+        searchResult.innerHTML = "Student ID already exists";
         return;
     }
 
@@ -35,7 +36,7 @@ function addStudent() {
 
     // Add student to array
     students.push(student);
-  document.getElementById("searchResult").innerHTML = "Student added successfully!";
+  searchResult.innerHTML = "Student added successfully!";
     // alert("Student added successfully!");
 
     // Clear input fields
@@ -93,7 +94,7 @@ function searchStudent() {
 
     if (student) {
 
-        document.getElementById("searchResult").innerHTML = `
+        searchResult.innerHTML = `
             <h3>Student Found</h3>
             <p>Name: ${student.name}</p>
             <p>ID: ${student.id}</p>
@@ -131,7 +132,7 @@ function updateStudent(id) {
             student.email = newEmail;
             student.age = Number(newAge);
             student.course = newCourse;
-             document.getElementById("searchResult").innerHTML = `Student updated successfully!`;
+             searchResult.innerHTML = `Student updated successfully!`;
                    
             // alert("Student updated successfully!");
 

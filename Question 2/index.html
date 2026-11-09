@@ -24,9 +24,10 @@
     function calculateSalary() {
       const employeeName = document.getElementById("employeeName").value;
       const basicSalary = parseFloat(document.getElementById("basicSalary").value);
+     const result = document.getElementById("result")
 
       if (!employeeName || isNaN(basicSalary)) {
-        document.getElementById("result").innerHTML = "Please enter valid information.";
+        result.innerHTML = "Please enter valid information.";
         return;
       }
 
@@ -34,7 +35,7 @@
       const transportAllowance = basicSalary * 0.1;
       const totalSalary = basicSalary + housingAllowance + transportAllowance;
 
-      document.getElementById("result").innerHTML = `
+      result.innerHTML = `
         <h3>Salary Details for ${employeeName}</h3>
         <p><strong>Basic Salary:</strong> ₦${basicSalary.toFixed(2)}</p>
         <p><strong>Housing Allowance:</strong> ₦${housingAllowance.toFixed(2)}</p>
